@@ -10,6 +10,19 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get("/api/now", (req, res) => {
+  res.json({
+    date: new Date(),
+  });
+});
+
+let counter = 0;
+
+app.get("/api/counter", (req, res) => {
+  res.json({ counter });
+  counter++;
+});
+
 app.use(express.static("."));
 app.use(serveIndex(".", { icons: true }));
 
