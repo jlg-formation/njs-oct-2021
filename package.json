@@ -2,7 +2,7 @@
   "name": "gestion-stock",
   "version": "1.0.0",
   "description": "Projet de Formation Orsys NJSCV1",
-  "main": "server.ts",
+  "main": "src/server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npx nodemon"
