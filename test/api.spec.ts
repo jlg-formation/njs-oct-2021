@@ -1,11 +1,22 @@
+import { WebServer } from "./../src/WebServer";
 import assert from "assert";
 import got from "got";
 
-const port = process.env.GESTION_STOCK_TEST_PORT || "3000";
+const port = +(process.env.GESTION_STOCK_TEST_PORT || "3000");
 
 const domain = `http://localhost:${port}`;
 
 describe("Server API", function () {
+  let server = new WebServer({ port });
+
+  before(async function () {
+    await server.start();
+  });
+
+  after(async function () {
+    await server.stop();
+  });
+
   it("should return the date", async function () {
     this.timeout(30000);
 
