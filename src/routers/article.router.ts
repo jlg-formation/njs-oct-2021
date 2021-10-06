@@ -44,3 +44,9 @@ app.delete("/", (req, res) => {
   articles = [];
   res.status(204).end();
 });
+
+app.delete("/:id", (req, res) => {
+  const id = req.params.id;
+  articles = articles.filter((a) => a.id !== id);
+  res.status(204).end();
+});
