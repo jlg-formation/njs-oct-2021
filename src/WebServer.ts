@@ -15,7 +15,7 @@ export class WebServer {
   app: Express;
   server: Server;
 
-  constructor(options: Partial<WebServerOptions> = {}) {
+  constructor(options: Partial<WebServerOptions>) {
     this.options = { ...this.options, ...options };
 
     console.log("About to start a web server");
