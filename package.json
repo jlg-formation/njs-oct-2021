@@ -7,6 +7,9 @@
     "test": "mocha",
     "start": "npx nodemon -r dotenv/config"
   },
+  "engines": {
+    "node": ">=12"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
