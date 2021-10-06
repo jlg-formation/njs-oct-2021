@@ -1,9 +1,14 @@
-var assert = require("assert");
+import assert from "assert";
+import got from "got";
 
-describe("Array", function () {
-  describe("#indexOf()", function () {
-    it("should return -1 when the value is not present", function () {
-      assert.equal([1, 2, 3].indexOf(4), -1);
-    });
+describe("Server API", function () {
+  it("should return the date", async function () {
+    this.timeout(30000);
+
+    const response = await got
+      .get("http://localhost:3000/api/now")
+      .json<{ date: string }>();
+
+    assert(typeof response.date === "string");
   });
 });
