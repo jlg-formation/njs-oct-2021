@@ -40,4 +40,24 @@ describe("Server start and stop", function () {
       assert(typeof err === "string" && err.startsWith("Cannot stop"));
     }
   });
+
+  it("should start the server in error (same port) ", async function () {
+    this.timeout(30000);
+
+    const server = new WebServer({ port });
+    await server.start();
+    const response = await got
+      .get(domain + "/api/counter")
+      .json<{ counter: number }>();
+    assert(typeof response.counter === "number");
+
+    try {
+      await server.start();
+      assert(false);
+    } catch (err) {
+      assert(err.code === "EADDRINUSE");
+    } finally {
+      await server.stop();
+    }
+  });
 });

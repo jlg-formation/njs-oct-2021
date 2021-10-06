@@ -36,10 +36,17 @@ export class WebServer {
 
   start(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.server = this.app.listen(this.options.port, () => {
+      const errorCallback = function (err) {
+        reject(err);
+      };
+
+      const server = this.app.listen(this.options.port, () => {
         console.log(`Server started on port ${this.options.port}`);
+        this.server = server;
+        server.removeListener("error", errorCallback);
         resolve();
       });
+      server.once("error", errorCallback);
     });
   }
 
