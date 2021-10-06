@@ -4,7 +4,7 @@ import { api } from "./api";
 
 console.log("About to start a web server");
 const app = express();
-const port: number = 3000;
+const port = +(process.env.GESTION_STOCK_TEST_PORT || "3000");
 
 app.use((req, res, next) => {
   console.log("path", req.url);
