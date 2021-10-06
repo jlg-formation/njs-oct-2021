@@ -5,7 +5,7 @@ const app = express.Router();
 
 export const articleRouter = app;
 
-const articles: Article[] = [
+let articles: Article[] = [
   {
     id: "a1",
     name: "Tournevis",
@@ -37,5 +37,10 @@ app.get("/:id", (req, res) => {
     res.status(404).end();
     return;
   }
-  res.json(articles);
+  res.json(article);
+});
+
+app.delete("/", (req, res) => {
+  articles = [];
+  res.status(204).end();
 });
