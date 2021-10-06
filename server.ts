@@ -1,7 +1,7 @@
 console.log("About to start a web server");
 
-const express = require("express");
-const serveIndex = require("serve-index");
+import express from "express";
+import serveIndex from "serve-index";
 
 const app = express();
 const port: number = 3000;
