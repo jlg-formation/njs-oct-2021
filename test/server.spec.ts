@@ -2,7 +2,7 @@ import assert from "assert";
 import got from "got";
 import { WebServer } from "../src/WebServer";
 
-const port = +(process.env.GESTION_STOCK_TEST_PORT || "3000");
+const port = +(process.env.GESTION_STOCK_TEST_PORT || "3222");
 const domain = `http://localhost:${port}`;
 
 describe("Server start and stop", function () {
@@ -17,9 +17,10 @@ describe("Server start and stop", function () {
     assert(typeof response.counter === "number");
     await server.stop();
     try {
-      const response2 = await got.get(domain + "/api/counter");
+      await got.get(domain + "/api/counter");
+      assert(false);
     } catch (err) {
-      console.log("err: ", err);
+      assert(err.code === "ECONNREFUSED");
     }
   });
 });
