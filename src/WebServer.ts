@@ -45,6 +45,10 @@ export class WebServer {
 
   stop(): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (!this.server) {
+        reject("Cannot stop a server if it was not started before.");
+        return;
+      }
       this.server.close((err) => {
         if (err) {
           reject(err);

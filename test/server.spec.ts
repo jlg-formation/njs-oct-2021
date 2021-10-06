@@ -22,5 +22,22 @@ describe("Server start and stop", function () {
     } catch (err) {
       assert(err.code === "ECONNREFUSED");
     }
+    try {
+      await server.stop();
+      assert(false);
+    } catch (err) {
+      assert(err.code === "ERR_SERVER_NOT_RUNNING");
+    }
+  });
+  it("should stop the server in error", async function () {
+    this.timeout(3000);
+
+    const server = new WebServer({ port });
+    try {
+      await server.stop();
+      assert(false);
+    } catch (err) {
+      assert(typeof err === "string" && err.startsWith("Cannot stop"));
+    }
   });
 });

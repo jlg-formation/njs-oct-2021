@@ -4,7 +4,7 @@
   "description": "Projet de Formation Orsys NJSCV1",
   "main": "src/server.ts",
   "scripts": {
-    "test": "mocha",
+    "test": "nyc mocha",
     "start": "npx nodemon -r dotenv/config"
   },
   "engines": {
@@ -26,6 +26,7 @@
     "got": "^11.8.2",
     "mocha": "^9.1.2",
     "nodemon": "^2.0.13",
+    "nyc": "^15.1.0",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3"
   }
