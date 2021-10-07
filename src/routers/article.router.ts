@@ -75,6 +75,19 @@ app.put("/:id", (req, res) => {
   res.status(204).end();
 });
 
+// Patch
+app.patch("/:id", (req, res) => {
+  const partialArticle = req.body as Partial<Article>;
+  const id = req.params.id;
+  const article = articles.find((a) => a.id === id);
+  if (!article) {
+    res.status(404).end();
+    return;
+  }
+  Object.assign(article, partialArticle);
+  res.status(204).end();
+});
+
 // Delete
 app.delete("/", (req, res) => {
   articles = [];
