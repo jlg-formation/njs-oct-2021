@@ -35,7 +35,7 @@ describe("Server start and stop", function () {
   it("should stop the server in error", async function () {
     this.timeout(3000);
 
-    const server = new WebServer({ port });
+    const server = new WebServer({ port, dbUri });
     try {
       await server.stop();
       assert(false);
@@ -47,7 +47,7 @@ describe("Server start and stop", function () {
   it("should start the server in error (same port) ", async function () {
     this.timeout(30000);
 
-    const server = new WebServer({ port });
+    const server = new WebServer({ port, dbUri });
     await server.start();
     const response = await got
       .get(domain + "/api/counter")

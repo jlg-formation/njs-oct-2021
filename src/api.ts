@@ -1,7 +1,8 @@
 import express from "express";
 import { articleRouter } from "./routers/article.router";
+import { WebServer } from "./WebServer";
 
-export const api = (dbServer) => {
+export const api = (webServer: WebServer) => {
   const app = express.Router();
 
   app.get("/now", (req, res) => {
@@ -17,6 +18,6 @@ export const api = (dbServer) => {
     counter++;
   });
 
-  app.use("/articles", articleRouter(dbServer));
+  app.use("/articles", articleRouter(webServer));
   return app;
 };

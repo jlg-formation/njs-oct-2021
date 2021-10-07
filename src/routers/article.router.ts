@@ -1,15 +1,13 @@
-import { DbServer } from "./../DbServer";
 import express from "express";
-import { ArticleFileService } from "../services/article-file.service";
 import { ArticleMongoService } from "../services/article-mongo.service";
 import { Article } from "./../interfaces/Article";
+import { WebServer } from "./../WebServer";
 
-const app = express.Router();
+export const articleRouter = (webServer: WebServer) => {
+  const app = express.Router();
 
-app.use(express.json());
-
-export const articleRouter = (dbServer: DbServer) => {
-  const articleService = new ArticleMongoService(dbServer);
+  app.use(express.json());
+  const articleService = new ArticleMongoService(webServer);
 
   // Create
   app.post("/", (req, res) => {

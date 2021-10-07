@@ -1,20 +1,19 @@
 import assert from "assert";
 import { DbServer } from "../src/DbServer";
 
-const uri =
-  "mongodb://localhost:27017/test-gestion-client?retryWrites=true&w=majority";
+const uri = "mongodb://localhost:27017/test-gestion-client";
 
 describe("Mongo", function () {
   let dbServer: DbServer;
 
-  before(async function () {
+  it("starts the server", async function () {
+    this.timeout(30000);
     dbServer = new DbServer({ uri });
     console.log("before all: mongo");
     await dbServer.start();
-  });
-
-  after(async function () {
     await dbServer.stop();
+    dbServer = new DbServer({ uri });
+    await dbServer.start();
   });
 
   it("should delete all data", async function () {
@@ -60,5 +59,10 @@ describe("Mongo", function () {
       .find({})
       .toArray();
     assert.deepStrictEqual(result.length, 0);
+  });
+
+  it("stops the server", async function () {
+    this.timeout(30000);
+    await dbServer.stop();
   });
 });

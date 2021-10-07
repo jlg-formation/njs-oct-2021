@@ -1,6 +1,7 @@
 import { WebServer } from "../src/WebServer";
 import assert from "assert";
 import got from "got";
+import { Article } from "../src/interfaces/Article";
 
 const port = +(process.env.GESTION_STOCK_TEST_PORT || "3000");
 const dbUri =
@@ -11,16 +12,11 @@ const domain = `http://localhost:${port}`;
 describe("Server API", function () {
   let server: WebServer;
 
-  before(async function () {
+  it("starts the server", async function () {
     console.log("before all: api");
     server = new WebServer({ port, dbUri });
     await server.start();
     console.log("server started");
-  });
-
-  after(async function () {
-    await server.stop();
-    console.log("server stopped");
   });
 
   it("should return the date", async function () {
@@ -40,5 +36,20 @@ describe("Server API", function () {
       .json<{ counter: number }>();
 
     assert(typeof response.counter === "number");
+  });
+
+  it("should return the articles list", async function () {
+    this.timeout(30000);
+
+    const response = await got.get(domain + "/api/articles").json<Article[]>();
+
+    assert(response instanceof Array);
+  });
+
+  it("stops the server", async function () {
+    this.timeout(30000);
+    console.log("after all: api");
+    await server.stop();
+    console.log("server stopped");
   });
 });

@@ -9,6 +9,8 @@ export interface WebServerOptions {
   dbUri: string;
 }
 
+let counter = 50;
+
 export class WebServer {
   options: WebServerOptions = {
     port: 3000,
@@ -18,11 +20,14 @@ export class WebServer {
   app: Express;
   server: Server;
   dbServer: DbServer;
+  name: string;
 
   constructor(options: Partial<WebServerOptions>) {
+    this.name = "webserver" + counter;
+    counter++;
     this.options = { ...this.options, ...options };
 
-    console.log("About to start a web server");
+    console.log("this.options.dbUri: ", this.options.dbUri);
     this.dbServer = new DbServer({ uri: this.options.dbUri });
     const app = express();
 
@@ -31,7 +36,7 @@ export class WebServer {
       next();
     });
 
-    app.use("/api", api(this.dbServer));
+    app.use("/api", api(this));
 
     app.use(express.static("."));
     app.use(serveIndex(".", { icons: true }));
@@ -40,9 +45,15 @@ export class WebServer {
   }
 
   start(): Promise<void> {
+    console.log("About to start a web server");
     return new Promise(async (resolve, reject) => {
       await this.dbServer.start();
-      const errorCallback = function (err) {
+      const errorCallback = async (err) => {
+        console.log(
+          "error while starting the webserver. try to stop the dbserver..."
+        );
+        await this.dbServer.stop();
+        console.log("dbserver stopped. rejecting.");
         reject(err);
       };
 
@@ -63,7 +74,9 @@ export class WebServer {
         return;
       }
       this.server.close(async (err) => {
+        console.log("about to stop the dbserver");
         await this.dbServer.stop();
+        console.log("dbserver stopped.");
         if (err) {
           reject(err);
           return;

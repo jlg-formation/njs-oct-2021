@@ -1,6 +1,7 @@
 import { DbServer } from "./../DbServer";
 import { Article } from "../interfaces/Article";
 import { ObjectId } from "mongodb";
+import { WebServer } from "../WebServer";
 
 function refactorArticle(mongoArticle: any) {
   const result = mongoArticle;
@@ -18,7 +19,14 @@ function toObjectId(id: string) {
 }
 
 export class ArticleMongoService {
-  constructor(private dbServer: DbServer) {}
+  private dbServer = this.webServer.dbServer;
+  constructor(private webServer: WebServer) {
+    console.log(
+      "ArticleMongoService dbServer: ",
+      this.webServer.name,
+      this.dbServer.name
+    );
+  }
 
   async create(article: Partial<Article>) {
     const result = await this.dbServer.client
@@ -29,6 +37,10 @@ export class ArticleMongoService {
   }
 
   async deleteAll() {
+    console.log("deleteAll - webServer name: ", this.webServer.name);
+    console.log("deleteAll - dbserver name: ", this.dbServer.name);
+    const databases = await this.dbServer.client.db().admin().listDatabases();
+    console.log("deleteAll - databases: ", databases);
     await this.dbServer.client.db().collection("articles").deleteMany({});
   }
 
