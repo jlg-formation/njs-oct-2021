@@ -5,9 +5,11 @@ const uri =
   "mongodb://localhost:27017/test-gestion-client?retryWrites=true&w=majority";
 
 describe("Mongo", function () {
-  let dbServer = new DbServer({ uri });
+  let dbServer: DbServer;
 
   before(async function () {
+    dbServer = new DbServer({ uri });
+    console.log("before all: mongo");
     await dbServer.start();
   });
 
@@ -18,7 +20,11 @@ describe("Mongo", function () {
   it("should delete all data", async function () {
     this.timeout(30000);
     dbServer.client.db().collection("articles").deleteMany({});
-    const result = await dbServer.db.collection("articles").find({}).toArray();
+    const result = await dbServer.client
+      .db()
+      .collection("articles")
+      .find({})
+      .toArray();
     assert.deepStrictEqual(result, []);
   });
 

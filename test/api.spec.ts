@@ -9,14 +9,18 @@ const dbUri =
 const domain = `http://localhost:${port}`;
 
 describe("Server API", function () {
-  let server = new WebServer({ port, dbUri });
+  let server: WebServer;
 
   before(async function () {
+    console.log("before all: api");
+    server = new WebServer({ port, dbUri });
     await server.start();
+    console.log("server started");
   });
 
   after(async function () {
     await server.stop();
+    console.log("server stopped");
   });
 
   it("should return the date", async function () {

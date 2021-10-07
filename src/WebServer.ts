@@ -63,11 +63,11 @@ export class WebServer {
         return;
       }
       this.server.close(async (err) => {
+        await this.dbServer.stop();
         if (err) {
           reject(err);
           return;
         }
-        await this.dbServer.stop();
         resolve();
       });
     });

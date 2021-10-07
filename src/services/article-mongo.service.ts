@@ -21,31 +21,35 @@ export class ArticleMongoService {
   constructor(private dbServer: DbServer) {}
 
   async create(article: Partial<Article>) {
-    const result = await this.dbServer.db
+    const result = await this.dbServer.client
+      .db()
       .collection("articles")
       .insertOne(article);
     return { ...article, id: result.insertedId.toString() };
   }
 
   async deleteAll() {
-    await this.dbServer.db.collection("articles").deleteMany({});
+    await this.dbServer.client.db().collection("articles").deleteMany({});
   }
 
   async deleteOne(id: string) {
-    await this.dbServer.db
+    await this.dbServer.client
+      .db()
       .collection("articles")
       .deleteOne({ _id: toObjectId(id) });
   }
 
   async patchOne(partialArticle: Partial<Article>) {
     const id = partialArticle.id;
-    await this.dbServer.db
+    await this.dbServer.client
+      .db()
       .collection("articles")
       .findOneAndUpdate({ _id: toObjectId(id) }, { $set: partialArticle });
   }
 
   async retrieveAll() {
-    const result = await this.dbServer.db
+    const result = await this.dbServer.client
+      .db()
       .collection("articles")
       .find({})
       .toArray();
@@ -58,7 +62,8 @@ export class ArticleMongoService {
 
   async retrieveOne(id: string) {
     try {
-      const result = await this.dbServer.db
+      const result = await this.dbServer.client
+        .db()
         .collection("articles")
         .findOne({ _id: toObjectId(id) });
       refactorArticle(result);
@@ -73,7 +78,8 @@ export class ArticleMongoService {
 
   async rewriteOne(article: Article) {
     const id = article.id;
-    await this.dbServer.db
+    await this.dbServer.client
+      .db()
       .collection("articles")
       .findOneAndReplace({ _id: toObjectId(id) }, article);
   }

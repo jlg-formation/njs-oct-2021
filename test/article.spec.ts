@@ -13,19 +13,18 @@ const domain = `http://localhost:${port}`;
 const url = `${domain}/api/articles`;
 
 describe("Article API", function () {
-  let server = new WebServer({ port, dbUri });
+  let server: WebServer;
 
   before(async function () {
-    try {
-      await server.start();
-    } catch (err) {
-      console.log("err: ", err);
-      console.log("start failed.");
-    }
+    console.log("before all: article");
+    server = new WebServer({ port, dbUri });
+    await server.start();
+    console.log("article test: server started");
   });
 
   after(async function () {
     await server.stop();
+    console.log("article test: server stopped");
   });
 
   it("should delete all", async function () {

@@ -1,4 +1,4 @@
-import { Db, MongoClient } from "mongodb";
+import { MongoClient } from "mongodb";
 
 export interface DbServerOptions {
   uri: string;
@@ -9,7 +9,6 @@ export class DbServer {
     uri: "TBD",
   };
   client: MongoClient;
-  db: Db;
 
   constructor(options: Partial<DbServerOptions>) {
     this.options = { ...this.options, ...options };
@@ -20,7 +19,8 @@ export class DbServer {
   async start() {
     try {
       await this.client.connect();
-      this.db = this.client.db();
+      const databases = await this.client.db().admin().listDatabases();
+      console.log("databases: ", databases);
     } catch (err) {
       console.log("mongodb connection failed.");
       console.log("err: ", err);
@@ -28,6 +28,7 @@ export class DbServer {
   }
 
   async stop() {
-    await this.client.close();
+    await this.client.close(true);
+    console.log("db connection closed");
   }
 }
