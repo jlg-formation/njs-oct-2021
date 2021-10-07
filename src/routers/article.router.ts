@@ -61,6 +61,20 @@ app.get("/:id", (req, res) => {
 
 // Update
 
+// Rewrite
+app.put("/:id", (req, res) => {
+  const article = req.body as Article;
+  const id = req.params.id;
+  article.id = id;
+  const index = articles.findIndex((a) => a.id === id);
+  if (index === -1) {
+    res.status(404).end();
+    return;
+  }
+  articles.splice(index, 1, article);
+  res.status(204).end();
+});
+
 // Delete
 app.delete("/", (req, res) => {
   articles = [];
