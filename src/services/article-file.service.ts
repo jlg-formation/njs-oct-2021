@@ -1,5 +1,6 @@
 import { promises } from "fs";
 import { Article } from "../interfaces/Article";
+import { BehaviorSubject, debounceTime } from "rxjs";
 
 const DATAFILE = "data/articles.json";
 
@@ -14,6 +15,7 @@ function generateId2(articles) {
 }
 
 export class ArticleFileService {
+  articles$ = new BehaviorSubject<Article[]>([]);
   constructor() {
     this.init();
   }
@@ -26,13 +28,19 @@ export class ArticleFileService {
         throw new Error(`the file ${DATAFILE} does not contain an array`);
       }
       articles = json;
+
+      this.articles$.pipe(debounceTime(1000)).subscribe({
+        next: (articles) => {
+          this.save(articles);
+        },
+      });
     } catch (err) {
       console.error("err: ", err);
       process.abort();
     }
   }
 
-  async save() {
+  async save(articles) {
     try {
       await promises.writeFile(
         DATAFILE,
@@ -47,17 +55,17 @@ export class ArticleFileService {
   async create(article: Partial<Article>) {
     article.id = generateId(articles);
     articles.push(article as Article);
-    this.save();
+    this.articles$.next(articles);
   }
 
   deleteAll() {
     articles = [];
-    this.save();
+    this.articles$.next(articles);
   }
 
   deleteOne(id: string) {
     articles = articles.filter((a) => a.id !== id);
-    this.save();
+    this.articles$.next(articles);
   }
 
   patchOne(partialArticle: Partial<Article>) {
@@ -66,7 +74,7 @@ export class ArticleFileService {
       throw new Error("not found");
     }
     Object.assign(article, partialArticle);
-    this.save();
+    this.articles$.next(articles);
   }
 
   async retrieveAll() {
@@ -84,6 +92,6 @@ export class ArticleFileService {
       throw new Error("not found");
     }
     articles.splice(index, 1, article);
-    this.save();
+    this.articles$.next(articles);
   }
 }
