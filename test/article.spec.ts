@@ -54,6 +54,7 @@ describe("Article API", function () {
         json: article,
       })
       .json();
+    console.log("createdArticle: ", createdArticle);
     assert(createdArticle.id !== undefined);
     const articles: Article[] = await got.get(url).json();
     assert.deepStrictEqual(articles.length, 1);

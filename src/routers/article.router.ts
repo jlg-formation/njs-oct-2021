@@ -16,8 +16,8 @@ export const articleRouter = (dbServer: DbServer) => {
     (async () => {
       try {
         const article: Partial<Article> = req.body;
-        await articleService.create(article);
-        res.status(201).json(article);
+        const createdArticle = await articleService.create(article);
+        res.status(201).json(createdArticle);
       } catch (err) {
         console.log("err: ", err);
         res.status(500).end();

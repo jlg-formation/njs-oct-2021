@@ -9,11 +9,22 @@ function refactorArticle(mongoArticle: any) {
   return result;
 }
 
+function toObjectId(id: string) {
+  try {
+    return new ObjectId(id);
+  } catch (err) {
+    throw new Error("not found");
+  }
+}
+
 export class ArticleMongoService {
   constructor(private dbServer: DbServer) {}
 
   async create(article: Partial<Article>) {
-    await this.dbServer.db.collection("articles").insertOne(article);
+    const result = await this.dbServer.db
+      .collection("articles")
+      .insertOne(article);
+    return { ...article, id: result.insertedId.toString() };
   }
 
   async deleteAll() {
@@ -21,22 +32,16 @@ export class ArticleMongoService {
   }
 
   async deleteOne(id: string) {
-    let objectId: ObjectId;
-    try {
-      console.log("about to generate objectid");
-      objectId = new ObjectId(id);
-      console.log("objectid generated");
-    } catch (err) {
-      throw new Error("not found");
-    }
-    await this.dbServer.db.collection("articles").deleteOne({ _id: objectId });
+    await this.dbServer.db
+      .collection("articles")
+      .deleteOne({ _id: toObjectId(id) });
   }
 
   async patchOne(partialArticle: Partial<Article>) {
     const id = partialArticle.id;
     await this.dbServer.db
       .collection("articles")
-      .findOneAndUpdate({ _id: new ObjectId(id) }, partialArticle);
+      .findOneAndUpdate({ _id: toObjectId(id) }, { $set: partialArticle });
   }
 
   async retrieveAll() {
@@ -52,17 +57,24 @@ export class ArticleMongoService {
   }
 
   async retrieveOne(id: string) {
-    const result = await this.dbServer.db
-      .collection("articles")
-      .findOne({ _id: new ObjectId(id) });
-    refactorArticle(result);
-    return result;
+    try {
+      const result = await this.dbServer.db
+        .collection("articles")
+        .findOne({ _id: toObjectId(id) });
+      refactorArticle(result);
+      return result;
+    } catch (err) {
+      if (err.message === "not found") {
+        return undefined;
+      }
+      throw err;
+    }
   }
 
   async rewriteOne(article: Article) {
     const id = article.id;
     await this.dbServer.db
       .collection("articles")
-      .findOneAndReplace({ _id: new ObjectId(id) }, article);
+      .findOneAndReplace({ _id: toObjectId(id) }, article);
   }
 }
