@@ -102,4 +102,13 @@ describe("Article API", function () {
     articles = await got.get(url).json();
     assert.deepStrictEqual(articles.length, 0);
   });
+
+  it("should retrieve none", async function () {
+    this.timeout(10000);
+    const response = await got.get(`${url}/notFoundId`, {
+      resolveBodyOnly: false,
+      throwHttpErrors: false,
+    });
+    assert.deepStrictEqual(response.statusCode, 404);
+  });
 });

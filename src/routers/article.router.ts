@@ -98,8 +98,11 @@ app.patch("/:id", (req, res) => {
       }
       res.status(204).end();
     } catch (err) {
-      console.log("err: ", err);
-      res.status(500).end();
+      /* istanbul ignore next */
+      {
+        console.log("err: ", err);
+        res.status(500).end();
+      }
     }
   })();
 });
