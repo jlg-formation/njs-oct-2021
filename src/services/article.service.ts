@@ -48,7 +48,7 @@ export class ArticleService {
     if (!article) {
       throw new Error("not found");
     }
-    Object.assign(partialArticle, partialArticle);
+    Object.assign(article, partialArticle);
   }
 
   async retrieveAll() {

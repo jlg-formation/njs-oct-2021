@@ -84,7 +84,7 @@ app.put("/:id", (req, res) => {
 app.patch("/:id", (req, res) => {
   (async () => {
     try {
-      const article = req.body as Article;
+      const article = req.body as Partial<Article>;
       const id = req.params.id;
       article.id = id;
       try {

@@ -59,4 +59,47 @@ describe("Article API", function () {
     const article: Article = await got.get(`${url}/${id}`).json();
     assert.deepStrictEqual(article, articles[0]);
   });
+
+  it("should rewrite one", async function () {
+    this.timeout(10000);
+    let articles: Article[] = await got.get(url).json();
+    assert.deepStrictEqual(articles.length, 1);
+    const article = articles[0];
+    article.name = "Machin";
+    const response = await got.put(`${url}/${article.id}`, {
+      resolveBodyOnly: false,
+      json: article,
+    });
+    assert.deepStrictEqual(response.statusCode, 204);
+    articles = await got.get(url).json();
+    assert.deepStrictEqual(articles[0], article);
+  });
+
+  it("should patch one", async function () {
+    this.timeout(10000);
+    let articles: Article[] = await got.get(url).json();
+    assert.deepStrictEqual(articles.length, 1);
+    const article = articles[0];
+    article.name = "Bidule";
+    const response = await got.patch(`${url}/${article.id}`, {
+      resolveBodyOnly: false,
+      json: article,
+    });
+    assert.deepStrictEqual(response.statusCode, 204);
+    articles = await got.get(url).json();
+    assert.deepStrictEqual(articles[0], article);
+  });
+
+  it("should delete one", async function () {
+    this.timeout(10000);
+    let articles: Article[] = await got.get(url).json();
+    assert.deepStrictEqual(articles.length, 1);
+    const article = articles[0];
+    const response = await got.delete(`${url}/${article.id}`, {
+      resolveBodyOnly: false,
+    });
+    assert.deepStrictEqual(response.statusCode, 204);
+    articles = await got.get(url).json();
+    assert.deepStrictEqual(articles.length, 0);
+  });
 });
