@@ -16,7 +16,6 @@ export class DbServer {
 
   constructor(options: Partial<DbServerOptions>) {
     this.options = { ...this.options, ...options };
-    console.log("this.options.uri: ", this.options.uri);
     this.client = new MongoClient(this.options.uri);
     this.name = "dbServer-" + counter;
     counter++;
@@ -25,17 +24,13 @@ export class DbServer {
   async start() {
     try {
       await this.client.connect();
-      const databases = await this.client.db().admin().listDatabases();
-      console.log("databases: ", databases);
+      // const databases = await this.client.db().admin().listDatabases();
     } catch (err) {
-      console.log("mongodb connection failed.");
-      console.log("err: ", err);
+      console.error("err: ", err);
     }
   }
 
   async stop() {
     await this.client.close(true);
-    await sleep(1000);
-    console.log("db connection closed");
   }
 }

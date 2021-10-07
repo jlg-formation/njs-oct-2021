@@ -27,7 +27,6 @@ export class WebServer {
     counter++;
     this.options = { ...this.options, ...options };
 
-    console.log("this.options.dbUri: ", this.options.dbUri);
     this.dbServer = new DbServer({ uri: this.options.dbUri });
     const app = express();
 
@@ -45,15 +44,10 @@ export class WebServer {
   }
 
   start(): Promise<void> {
-    console.log("About to start a web server");
     return new Promise(async (resolve, reject) => {
       await this.dbServer.start();
       const errorCallback = async (err) => {
-        console.log(
-          "error while starting the webserver. try to stop the dbserver..."
-        );
         await this.dbServer.stop();
-        console.log("dbserver stopped. rejecting.");
         reject(err);
       };
 
@@ -74,9 +68,7 @@ export class WebServer {
         return;
       }
       this.server.close(async (err) => {
-        console.log("about to stop the dbserver");
         await this.dbServer.stop();
-        console.log("dbserver stopped.");
         if (err) {
           reject(err);
           return;
