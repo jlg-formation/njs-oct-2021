@@ -1,5 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/mocharc",
   "extension": ["spec.ts"],
-  "require": ["ts-node/register", "dotenv/config"]
+  "require": ["ts-node/register", "dotenv/config"],
+  "watch-files": ["./src", "./test"]
 }

@@ -19,7 +19,6 @@ describe("Server API", function () {
 
   it("should return the date", async function () {
     this.timeout(30000);
-
     const response = await got
       .get(domain + "/api/now")
       .json<{ date: string }>();
