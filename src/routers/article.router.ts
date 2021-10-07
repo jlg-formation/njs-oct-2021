@@ -3,6 +3,8 @@ import express from "express";
 
 const app = express.Router();
 
+app.use(express.json());
+
 export const articleRouter = app;
 
 let articles: Article[] = [
@@ -26,6 +28,23 @@ let articles: Article[] = [
   },
 ];
 
+function generateId(articles) {
+  return "a" + (Math.max(...articles.map((a) => +a.id.substring(1))) + 1);
+}
+
+function generateId2(articles) {
+  return Date.now() + "_" + Math.floor(Math.random() * 1e9);
+}
+
+// Create
+app.post("/", (req, res) => {
+  const article: Article = req.body;
+  article.id = generateId(articles);
+  articles.push(article);
+  res.status(201).json(article);
+});
+
+// Retrieve
 app.get("/", (req, res) => {
   res.json(articles);
 });
@@ -40,6 +59,9 @@ app.get("/:id", (req, res) => {
   res.json(article);
 });
 
+// Update
+
+// Delete
 app.delete("/", (req, res) => {
   articles = [];
   res.status(204).end();
