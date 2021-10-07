@@ -1,6 +1,6 @@
-import { ArticleService } from "./../services/article.service";
-import { Article } from "./../interfaces/Article";
 import express from "express";
+import { ArticleFileService } from "../services/article-file.service";
+import { Article } from "./../interfaces/Article";
 
 const app = express.Router();
 
@@ -8,7 +8,7 @@ app.use(express.json());
 
 export const articleRouter = app;
 
-const articleService = new ArticleService();
+const articleService = new ArticleFileService();
 
 // Create
 app.post("/", (req, res) => {
