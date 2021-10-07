@@ -3,13 +3,16 @@ import got from "got";
 import { WebServer } from "../src/WebServer";
 
 const port = +(process.env.GESTION_STOCK_TEST_PORT || "3222");
+const dbUri =
+  process.env.GESTION_STOCK_DBURI ||
+  "mongodb://localhost:27017/test-gestion-client";
 const domain = `http://localhost:${port}`;
 
 describe("Server start and stop", function () {
   it("should start and stop the server ", async function () {
     this.timeout(30000);
 
-    const server = new WebServer({ port });
+    const server = new WebServer({ port, dbUri });
     await server.start();
     const response = await got
       .get(domain + "/api/counter")

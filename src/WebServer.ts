@@ -1,3 +1,4 @@
+import { DbServer } from "./DbServer";
 import express, { Express } from "express";
 import { Server } from "http";
 import serveIndex from "serve-index";
@@ -5,20 +6,24 @@ import { api } from "./api";
 
 export interface WebServerOptions {
   port: number;
+  dbUri: string;
 }
 
 export class WebServer {
   options: WebServerOptions = {
     port: 3000,
+    dbUri: "TBD",
   };
 
   app: Express;
   server: Server;
+  dbServer: DbServer;
 
   constructor(options: Partial<WebServerOptions>) {
     this.options = { ...this.options, ...options };
 
     console.log("About to start a web server");
+    this.dbServer = new DbServer({ uri: this.options.dbUri });
     const app = express();
 
     app.use((req, res, next) => {
@@ -26,7 +31,7 @@ export class WebServer {
       next();
     });
 
-    app.use("/api", api);
+    app.use("/api", api(this.dbServer));
 
     app.use(express.static("."));
     app.use(serveIndex(".", { icons: true }));
@@ -35,7 +40,8 @@ export class WebServer {
   }
 
   start(): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      await this.dbServer.start();
       const errorCallback = function (err) {
         reject(err);
       };
@@ -56,11 +62,12 @@ export class WebServer {
         reject("Cannot stop a server if it was not started before.");
         return;
       }
-      this.server.close((err) => {
+      this.server.close(async (err) => {
         if (err) {
           reject(err);
           return;
         }
+        await this.dbServer.stop();
         resolve();
       });
     });

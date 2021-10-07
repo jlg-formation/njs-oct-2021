@@ -4,16 +4,24 @@ import got from "got";
 import { Article } from "../src/interfaces/Article";
 
 const port = +(process.env.GESTION_STOCK_TEST_PORT || "3000");
+const dbUri =
+  process.env.GESTION_STOCK_DBURI ||
+  "mongodb://localhost:27017/test-gestion-client";
 
 const domain = `http://localhost:${port}`;
 
 const url = `${domain}/api/articles`;
 
 describe("Article API", function () {
-  let server = new WebServer({ port });
+  let server = new WebServer({ port, dbUri });
 
   before(async function () {
-    await server.start();
+    try {
+      await server.start();
+    } catch (err) {
+      console.log("err: ", err);
+      console.log("start failed.");
+    }
   });
 
   after(async function () {

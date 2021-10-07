@@ -1,13 +1,15 @@
-import { WebServer } from "./../src/WebServer";
+import { WebServer } from "../src/WebServer";
 import assert from "assert";
 import got from "got";
 
 const port = +(process.env.GESTION_STOCK_TEST_PORT || "3000");
-
+const dbUri =
+  process.env.GESTION_STOCK_DBURI ||
+  "mongodb://localhost:27017/test-gestion-client";
 const domain = `http://localhost:${port}`;
 
 describe("Server API", function () {
-  let server = new WebServer({ port });
+  let server = new WebServer({ port, dbUri });
 
   before(async function () {
     await server.start();
