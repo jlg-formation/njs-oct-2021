@@ -5,6 +5,7 @@ import express, { Express } from "express";
 import { Server } from "http";
 import serveIndex from "serve-index";
 import { api } from "./api";
+import { frontendRouter } from "./routers/frontend.router";
 
 export interface WebServerOptions {
   port: number;
@@ -40,25 +41,9 @@ export class WebServer {
       next();
     });
 
+    app.use("/", frontendRouter(this));
+
     app.use("/api", api(this));
-
-    app.get("/", (req, res) => {
-      res.render("pages/home");
-    });
-
-    app.get("/articles", (req, res) => {
-      (async () => {
-        try {
-          const articleService = new ArticleMongoService(this);
-          res.render("pages/articles", {
-            articles: await articleService.retrieveAll(),
-          });
-        } catch (err) {
-          console.log("err: ", err);
-          res.status(500).end();
-        }
-      })();
-    });
 
     app.use(express.static("."));
     app.use(serveIndex(".", { icons: true }));
