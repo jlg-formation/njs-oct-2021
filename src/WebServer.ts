@@ -30,12 +30,23 @@ export class WebServer {
     this.dbServer = new DbServer({ uri: this.options.dbUri });
     const app = express();
 
+    app.set("view engine", "ejs");
+    app.set("views", "./views");
+
     app.use((req, res, next) => {
       console.log("path", req.url);
       next();
     });
 
     app.use("/api", api(this));
+
+    app.get("/", (req, res) => {
+      res.render("pages/home");
+    });
+
+    app.get("/articles", (req, res) => {
+      res.render("pages/articles");
+    });
 
     app.use(express.static("."));
     app.use(serveIndex(".", { icons: true }));
