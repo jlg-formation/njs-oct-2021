@@ -5,9 +5,55 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Liste des articles</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <h1>Liste des articles</h1>
+    <div class="layout">
+      <%- include('../layout/header', {}); %>
+
+      <section class="main">
+        <main class="centered">
+          <h1>Liste des articles</h1>
+          <div class="table">
+            <nav>
+              <button>Ajouter</button>
+              <button>Supprimer</button>
+            </nav>
+            <table>
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Prix</th>
+                  <th>Quantité</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Tournevis</td>
+                  <td>2.34 €</td>
+                  <td>345</td>
+                </tr>
+                <tr>
+                  <td>Tournevis</td>
+                  <td>2.34 €</td>
+                  <td>345</td>
+                </tr>
+                <tr>
+                  <td>Tournevis</td>
+                  <td>2.34 €</td>
+                  <td>345</td>
+                </tr>
+                <tr>
+                  <td>Tournevis</td>
+                  <td>2.34 €</td>
+                  <td>345</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </main>
+      </section>
+      <%- include('../layout/footer', {}); %>
+    </div>
   </body>
 </html>
