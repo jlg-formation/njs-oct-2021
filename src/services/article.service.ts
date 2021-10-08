@@ -1,32 +1,30 @@
-import { Article } from "../interfaces/Article";
+import {Article} from '../interfaces/Article';
 
 let articles: Article[] = [
   {
-    id: "a1",
-    name: "Tournevis",
+    id: 'a1',
+    name: 'Tournevis',
     price: 2.99,
     qty: 400,
   },
   {
-    id: "a2",
-    name: "Pince",
+    id: 'a2',
+    name: 'Pince',
     price: 3.45,
     qty: 23,
   },
   {
-    id: "a3",
-    name: "Marteau",
+    id: 'a3',
+    name: 'Marteau',
     price: 1.5,
     qty: 12,
   },
 ];
 
-function generateId(articles) {
-  return "a" + (Math.max(0, ...articles.map((a) => +a.id.substring(1))) + 1);
-}
-
-function generateId2(articles) {
-  return Date.now() + "_" + Math.floor(Math.random() * 1e9);
+function generateId(articleArray: Article[]) {
+  return (
+    'a' + (Math.max(0, ...articleArray.map((a) => +a.id.substring(1))) + 1)
+  );
 }
 
 export class ArticleService {
@@ -46,7 +44,7 @@ export class ArticleService {
   patchOne(partialArticle: Partial<Article>) {
     const article = articles.find((a) => a.id === partialArticle.id);
     if (!article) {
-      throw new Error("not found");
+      throw new Error('not found');
     }
     Object.assign(article, partialArticle);
   }
@@ -56,14 +54,13 @@ export class ArticleService {
   }
 
   async retrieveOne(id: string) {
-    const article = articles.find((a) => a.id === id);
-    return article;
+    return articles.find((a) => a.id === id);
   }
 
   rewriteOne(article: Article) {
     const index = articles.findIndex((a) => a.id === article.id);
     if (index === -1) {
-      throw new Error("not found");
+      throw new Error('not found');
     }
     articles.splice(index, 1, article);
   }

@@ -1,5 +1,4 @@
-import { sleep } from "./misc";
-import { MongoClient } from "mongodb";
+import {MongoClient} from 'mongodb';
 
 export interface DbServerOptions {
   uri: string;
@@ -9,15 +8,15 @@ let counter = 1;
 
 export class DbServer {
   options: DbServerOptions = {
-    uri: "TBD",
+    uri: 'TBD',
   };
   client: MongoClient;
   name: string;
 
   constructor(options: Partial<DbServerOptions>) {
-    this.options = { ...this.options, ...options };
+    this.options = {...this.options, ...options};
     this.client = new MongoClient(this.options.uri);
-    this.name = "dbServer-" + counter;
+    this.name = 'dbServer-' + counter;
     counter++;
   }
 

@@ -1,17 +1,15 @@
-import { promises } from "fs";
-import { Article } from "../interfaces/Article";
-import { BehaviorSubject, debounceTime } from "rxjs";
+import {promises} from 'fs';
+import {Article} from '../interfaces/Article';
+import {BehaviorSubject, debounceTime} from 'rxjs';
 
-const DATAFILE = "data/articles.json";
+const DATAFILE = 'data/articles.json';
 
 let articles: Article[] = [];
 
-function generateId(articles) {
-  return "a" + (Math.max(0, ...articles.map((a) => +a.id.substring(1))) + 1);
-}
-
-function generateId2(articles) {
-  return Date.now() + "_" + Math.floor(Math.random() * 1e9);
+function generateId(articleArray: Article[]) {
+  return (
+    'a' + (Math.max(0, ...articleArray.map((a) => +a.id.substring(1))) + 1)
+  );
 }
 
 export class ArticleFileService {
@@ -22,7 +20,7 @@ export class ArticleFileService {
 
   async init() {
     try {
-      const str = await promises.readFile(DATAFILE, { encoding: "utf-8" });
+      const str = await promises.readFile(DATAFILE, {encoding: 'utf-8'});
       const json = JSON.parse(str);
       if (!(json instanceof Array)) {
         throw new Error(`the file ${DATAFILE} does not contain an array`);
@@ -30,24 +28,24 @@ export class ArticleFileService {
       articles = json;
 
       this.articles$.pipe(debounceTime(1000)).subscribe({
-        next: (articles) => {
-          this.save(articles);
+        next: (articleArray) => {
+          this.save(articleArray);
         },
       });
     } catch (err) {
-      console.error("err: ", err);
+      console.error('err: ', err);
       process.abort();
     }
   }
 
-  async save(articles) {
+  async save(articleArray: Article[]) {
     try {
       await promises.writeFile(
         DATAFILE,
-        JSON.stringify(articles, undefined, 2)
+        JSON.stringify(articleArray, undefined, 2)
       );
     } catch (err) {
-      console.error("err: ", err);
+      console.error('err: ', err);
       throw err;
     }
   }
@@ -71,7 +69,7 @@ export class ArticleFileService {
   patchOne(partialArticle: Partial<Article>) {
     const article = articles.find((a) => a.id === partialArticle.id);
     if (!article) {
-      throw new Error("not found");
+      throw new Error('not found');
     }
     Object.assign(article, partialArticle);
     this.articles$.next(articles);
@@ -81,15 +79,14 @@ export class ArticleFileService {
     return articles;
   }
 
-  async retrieveOne(id: string) {
-    const article = articles.find((a) => a.id === id);
-    return article;
+  async retrieveOne(id: string): Promise<Article> {
+    return articles.find((a) => a.id === id);
   }
 
   rewriteOne(article: Article) {
     const index = articles.findIndex((a) => a.id === article.id);
     if (index === -1) {
-      throw new Error("not found");
+      throw new Error('not found');
     }
     articles.splice(index, 1, article);
     this.articles$.next(articles);

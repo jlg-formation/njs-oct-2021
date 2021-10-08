@@ -1,11 +1,9 @@
-import { ArticleMongoService } from "./services/article-mongo.service";
-import { ArticleService } from "./services/article.service";
-import { DbServer } from "./DbServer";
-import express, { Express } from "express";
-import { Server } from "http";
-import serveIndex from "serve-index";
-import { api } from "./api";
-import { frontendRouter } from "./routers/frontend.router";
+import express, {Express} from 'express';
+import {Server} from 'http';
+import serveIndex from 'serve-index';
+import {api} from './api';
+import {DbServer} from './DbServer';
+import {frontendRouter} from './routers/frontend.router';
 
 export interface WebServerOptions {
   port: number;
@@ -17,7 +15,7 @@ let counter = 1;
 export class WebServer {
   options: WebServerOptions = {
     port: 3000,
-    dbUri: "TBD",
+    dbUri: 'TBD',
   };
 
   app: Express;
@@ -26,27 +24,27 @@ export class WebServer {
   name: string;
 
   constructor(options: Partial<WebServerOptions>) {
-    this.name = "webserver" + counter;
+    this.name = 'webserver' + counter;
     counter++;
-    this.options = { ...this.options, ...options };
+    this.options = {...this.options, ...options};
 
-    this.dbServer = new DbServer({ uri: this.options.dbUri });
+    this.dbServer = new DbServer({uri: this.options.dbUri});
     const app = express();
 
-    app.set("view engine", "ejs");
-    app.set("views", "./views");
+    app.set('view engine', 'ejs');
+    app.set('views', './views');
 
     app.use((req, res, next) => {
-      console.log("path", req.url);
+      console.log('path', req.url);
       next();
     });
 
-    app.use("/", frontendRouter(this));
+    app.use('/', frontendRouter(this));
 
-    app.use("/api", api(this));
+    app.use('/api', api(this));
 
-    app.use(express.static("."));
-    app.use(serveIndex(".", { icons: true }));
+    app.use(express.static('.'));
+    app.use(serveIndex('.', {icons: true}));
 
     this.app = app;
   }
@@ -55,24 +53,27 @@ export class WebServer {
     return new Promise(async (resolve, reject) => {
       await this.dbServer.start();
       const errorCallback = async (err) => {
-        await this.dbServer.stop();
-        reject(err);
+        try {
+          await this.dbServer.stop();
+        } finally {
+          reject(err);
+        }
       };
 
       const server = this.app.listen(this.options.port, () => {
         console.log(`Server started on port ${this.options.port}`);
         this.server = server;
-        server.removeListener("error", errorCallback);
+        server.removeListener('error', errorCallback);
         resolve();
       });
-      server.once("error", errorCallback);
+      server.once('error', errorCallback);
     });
   }
 
   stop(): Promise<void> {
     return new Promise((resolve, reject) => {
       if (!this.server) {
-        reject("Cannot stop a server if it was not started before.");
+        reject(new Error('Cannot stop a server if it was not started before.'));
         return;
       }
       this.server.close(async (err) => {

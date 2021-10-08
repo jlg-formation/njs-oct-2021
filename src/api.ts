@@ -1,11 +1,12 @@
-import express from "express";
-import { articleRouter } from "./routers/article.router";
-import { WebServer } from "./WebServer";
+import express from 'express';
+import {articleRouter} from './routers/article.router';
+import {WebServer} from './WebServer';
 
 export const api = (webServer: WebServer) => {
+  // eslint-disable-next-line new-cap
   const app = express.Router();
 
-  app.get("/now", (req, res) => {
+  app.get('/now', (req, res) => {
     res.json({
       date: new Date(),
     });
@@ -13,11 +14,11 @@ export const api = (webServer: WebServer) => {
 
   let counter = 0;
 
-  app.get("/counter", (req, res) => {
-    res.json({ counter });
+  app.get('/counter', (req, res) => {
+    res.json({counter});
     counter++;
   });
 
-  app.use("/articles", articleRouter(webServer));
+  app.use('/articles', articleRouter(webServer));
   return app;
 };
