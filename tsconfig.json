@@ -1,5 +1,13 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true
-  }
+    "rootDir": ".",
+    "outDir": "build",
+    "esModuleInterop": true,
+    "target": "ES2018",
+    "moduleResolution": "Node",
+    "module": "commonjs",
+    "lib": ["es2018"],
+    "forceConsistentCasingInFileNames": true
+  },
+  "exclude": ["node_modules"]
 }

@@ -5,7 +5,9 @@
   "main": "src/server.ts",
   "scripts": {
     "test": "nyc mocha",
-    "start": "npx nodemon -r dotenv/config"
+    "start": "npx nodemon -r dotenv/config",
+    "build": "tsc",
+    "start:prod": "node build/src/server.js"
   },
   "engines": {
     "node": ">=12"
