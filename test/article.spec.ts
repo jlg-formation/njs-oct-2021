@@ -3,7 +3,7 @@ import assert from "assert";
 import got from "got";
 import { Article } from "../src/interfaces/Article";
 
-const port = +(process.env.GESTION_STOCK_TEST_PORT || "3000") + 1;
+const port = +(process.env.GESTION_STOCK_TEST_PORT || "3000");
 const dbUri =
   process.env.GESTION_STOCK_DBURI ||
   "mongodb://localhost:27017/test-gestion-client";
@@ -15,12 +15,20 @@ const url = `${domain}/api/articles`;
 describe("Article API", function () {
   let server: WebServer;
 
-  it("starts the server", async function () {
+  before(async function () {
     this.timeout(10000);
     console.log("before all: article");
     server = new WebServer({ port, dbUri });
     await server.start();
     console.log("article test: server started");
+  });
+
+  after(async function () {
+    this.timeout(10000);
+    console.log("after all: article");
+    await server.stop();
+    server = undefined;
+    console.log("article test: server stopped");
   });
 
   it("should delete all", async function () {
@@ -115,13 +123,5 @@ describe("Article API", function () {
       throwHttpErrors: false,
     });
     assert.deepStrictEqual(response.statusCode, 404);
-  });
-
-  it("stops the server", async function () {
-    this.timeout(10000);
-    console.log("after all: article");
-    await server.stop();
-    server = undefined;
-    console.log("article test: server stopped");
   });
 });
