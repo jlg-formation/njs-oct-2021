@@ -10,9 +10,15 @@ npm install
 
 ## Usage
 
+### For development
+
 ```
 npm start
 ```
+
+Open your browser on `http://localhost:3000`
+
+### Configuration
 
 ## Author
 
