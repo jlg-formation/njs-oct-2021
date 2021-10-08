@@ -1,4 +1,5 @@
 import assert from "assert";
+import { MongoParseError, MongoServerSelectionError } from "mongodb";
 import { DbServer } from "../src/DbServer";
 
 const uri = "mongodb://localhost:27017/test-gestion-client";
@@ -10,9 +11,6 @@ describe("Mongo", function () {
     this.timeout(30000);
     dbServer = new DbServer({ uri });
     console.log("before all: mongo");
-    await dbServer.start();
-    await dbServer.stop();
-    dbServer = new DbServer({ uri });
     await dbServer.start();
   });
 

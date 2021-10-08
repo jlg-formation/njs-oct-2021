@@ -22,12 +22,7 @@ export class DbServer {
   }
 
   async start() {
-    try {
-      await this.client.connect();
-      // const databases = await this.client.db().admin().listDatabases();
-    } catch (err) {
-      console.error("err: ", err);
-    }
+    await this.client.connect();
   }
 
   async stop() {
