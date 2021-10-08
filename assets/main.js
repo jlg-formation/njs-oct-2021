@@ -37,4 +37,16 @@ addEventListener("DOMContentLoaded", () => {
       refresh();
     });
   }
+
+  const suppressBtn = document.querySelector("button.suppress");
+  suppressBtn.addEventListener("click", async () => {
+    for (const id of selectedArticleIds) {
+      console.log("id: ", id);
+
+      await fetch(`/api/articles/${id}`, {
+        method: "DELETE",
+      });
+    }
+    location.reload();
+  });
 });
