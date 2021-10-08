@@ -2,6 +2,7 @@ module.exports = {
   apps: [
     {
       script: "build/src/server.js",
+      instances: "max",
       env: {
         GESTION_STOCK_SERVER_PORT: 3000,
         NODE_ENV: "production",
