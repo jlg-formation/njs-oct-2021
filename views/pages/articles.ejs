@@ -7,7 +7,7 @@
     <link rel="shortcut icon" href="/assets/logo.svg" type="image/svg" />
     <title>Liste des articles</title>
     <link rel="stylesheet" href="/css/style.css" />
-    <script src="/assets/main.js"></script>
+    <script defer src="/assets/main.js"></script>
   </head>
   <body>
     <div class="layout">
@@ -21,7 +21,7 @@
               <a href="/articles/add">
                 <button>Ajouter</button>
               </a>
-              <button>Supprimer</button>
+              <button class="suppress">Supprimer</button>
             </nav>
             <table>
               <thead>
@@ -33,7 +33,7 @@
               </thead>
               <tbody>
                 <% articles.forEach(function(article){ %>
-                <tr>
+                <tr data-id="<%= article.id %>">
                   <td><%= article.name %></td>
                   <td><%= article.price %> €</td>
                   <td><%= article.qty %></td>
