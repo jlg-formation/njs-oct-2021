@@ -23,5 +23,9 @@ export function frontendRouter(webServer: WebServer) {
     })();
   });
 
+  app.get("/articles/add", (req, res) => {
+    res.render("pages/add");
+  });
+
   return app;
 }
