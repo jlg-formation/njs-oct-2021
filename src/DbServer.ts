@@ -5,7 +5,7 @@ export interface DbServerOptions {
   uri: string;
 }
 
-let counter = 10;
+let counter = 1;
 
 export class DbServer {
   options: DbServerOptions = {

@@ -9,7 +9,7 @@ export interface WebServerOptions {
   dbUri: string;
 }
 
-let counter = 50;
+let counter = 1;
 
 export class WebServer {
   options: WebServerOptions = {
