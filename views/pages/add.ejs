@@ -13,18 +13,18 @@
       <section class="main">
         <main class="centered">
           <h1>Ajout d'un article</h1>
-          <form action="">
+          <form action="/articles/action/add" method="POST">
             <label>
               <div>Nom</div>
-              <input type="text" />
+              <input type="text" placeholder="Ex: Tournevis" name="name" />
             </label>
             <label>
               <div>Prix</div>
-              <input type="text" />
+              <input type="number" name="price" />
             </label>
             <label>
               <div>Quantité</div>
-              <input type="text" />
+              <input type="number" name="qty" />
             </label>
             <button>Ajouter</button>
           </form>
