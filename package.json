@@ -5,6 +5,7 @@
   "main": "src/server.ts",
   "scripts": {
     "test": "nyc mocha",
+    "e2e": "cypress open",
     "lint": "eslint .",
     "start": "npx nodemon -r dotenv/config",
     "build": "tsc",
