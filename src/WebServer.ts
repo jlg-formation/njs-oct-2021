@@ -1,3 +1,5 @@
+import { ArticleMongoService } from "./services/article-mongo.service";
+import { ArticleService } from "./services/article.service";
 import { DbServer } from "./DbServer";
 import express, { Express } from "express";
 import { Server } from "http";
@@ -45,7 +47,17 @@ export class WebServer {
     });
 
     app.get("/articles", (req, res) => {
-      res.render("pages/articles");
+      (async () => {
+        try {
+          const articleService = new ArticleMongoService(this);
+          res.render("pages/articles", {
+            articles: await articleService.retrieveAll(),
+          });
+        } catch (err) {
+          console.log("err: ", err);
+          res.status(500).end();
+        }
+      })();
     });
 
     app.use(express.static("."));
